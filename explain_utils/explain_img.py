@@ -73,23 +73,25 @@ def interpret_img(model, data_transform, args):
 
         MCP_feat_norm, MCP_feat, response_mask = cal_MCP(feats, concept_vecs, concept_means, args)
         for layer_i in range(len(response_mask)):
-            mask = response_mask[layer_i]
+            layer_masks = response_mask[layer_i]
 
-            # normalize between 0~1
-            mask = (mask - mask.min()) / (mask.max() - mask.min()) * 2 - 1
+            for concept_i in range(layer_masks.shape[1]):
+                mask = layer_masks[:, concept_i]
+                # normalize between 0~1
+                mask = (mask - mask.min()) / (mask.max() - mask.min()) * 2 - 1
+                
+                mask_resized = torch.nn.functional.interpolate(mask.unsqueeze(1), size = ori_img_tensor.shape[1:], mode = "bicubic", align_corners = True)
+                mask_resized[mask_resized < 0] = 0
+                mask_resized[mask_resized > 1] = 1
+
             
-            mask_resized = torch.nn.functional.interpolate(mask, size = ori_img_tensor.shape[1:], mode = "bicubic", align_corners = True)
-            mask_resized[mask_resized < 0] = 0
-            mask_resized[mask_resized > 1] = 1
-
-            for concept_i in range(mask.shape[1]):
-                masked_img = mask_resized[:, concept_i] * ori_img_tensor
-                r = torch.round(mask[:, concept_i].max(), decimals = 4)
+                masked_img = mask_resized[:, 0] * ori_img_tensor
+                r = torch.round(mask.max(), decimals = 4)
                 if args.save_each:
                     save_image(masked_img, f"{args.saved_dir}/L{layer_i + 1}_{concept_i + 1}_{r}.png")
                 masked_imgs.append(masked_img.cpu())
-                masks.append(mask_resized[:, concept_i].cpu())
-                masks_non_resize.append(mask[:, concept_i].cpu())
+                masks.append(mask_resized[:, 0].cpu())
+                masks_non_resize.append(mask.cpu())
     
         masked_imgs = torch.stack(masked_imgs, dim = 0)
         plt.imsave(fname = os.path.join(args.saved_dir, 'img.png'), arr = ori_img_tensor.permute(1, 2, 0).cpu().numpy(), vmin = 0.0, vmax = 1.0)
@@ -142,6 +144,7 @@ class Saver(object):
 
                     mask = self.masks[prototype_i]
                     mask = torch.clip(mask, max = 1, min = -1)
+
                     heatmap = cv2.applyColorMap(np.uint8(255 * mask[0]), cv2.COLORMAP_JET)
                     heatmap = np.float32(heatmap)/255
                     heatmap = heatmap[...,::-1] # OpenCV's BGR to RGB
@@ -425,7 +428,8 @@ if __name__ == '__main__':
     class_num = get_dataset(args.case_name)[-1]
 
     # load concept caption -----------------------------------------------------
-    concept_captions = pd.read_csv(f"./Concept Match/{args.case_name}/{args.model.lower()}_{args.basic_model}/{args.caption_model}/concept caption_v1.csv", index_col = None)
+    caption_path = f"./Concept Match/{args.case_name}/{args.model.lower()}_{args.basic_model}/{args.caption_model}/concept caption_v1.csv"
+    concept_captions = pd.read_csv(caption_path, index_col=None) if os.path.isfile(caption_path) else None
 
     # Load model (load pretrain if needed) ------------------------------------
     extra_args = {}

@@ -51,25 +51,38 @@ python -m torch.distributed.launch --nproc_per_node=4 --master_port 9568 train.p
 We will scan the entire training set to find the top-k response images for each concept prototype.
 
 ```bash
-bash visualize_prototype.sh
+bash ./script/visualize_prototype.sh
 ```
 
 ### Visualize Concept Patches
 Extract the top-k reaponse patches for each concept prototype.
 
 ```bash
-bash extract_patch.sh  
+bash ./script/extract_patch.sh  
 ```
 
 
 ### Caption Concepts
 Before caption the concepts, make sure the concept prototypes and patches are extracted (following the [Prototypes](#visualize-concept-prototypes) and [Patches](#visualize-concept-patches)).
 ```bash
-bash caption_script.sh
+bash ./script/caption_script.sh
 ```
 
 
 ### Evaluate Performance
+
+```bash
+bash ./script/eval_classify.sh
+```
+
+### Explain Image
+Before explain the image, make sure the concept prototypes and patches are extracted (following the [Prototypes](#visualize-concept-prototypes) and [Patches](#visualize-concept-patches)).
+The caption for the concept is optional.
+
+```bash
+bash ./script/explain_img.sh
+```
+
 
 ## Contact
 Bor-Shiun Wang: [eddiewang.cs10@nycu.edu.tw](eddiewang.cs10@nycu.edu.tw)
