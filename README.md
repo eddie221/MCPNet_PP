@@ -1,13 +1,13 @@
-# MCPNet++: An Interpretable Classifier via Multi-Level Concept Prototypes [TPAMI 2026]
+# MCPNet++: Interpretable Classifier via Multi-Level Concept Prototypes [TPAMI 2026]
 [Bor-Shiun Wang](https://eddie221.github.io/),
 [Chien-Yi Wang](https://chienyiwang.github.io/)\*,
 [Wei-Chen Chiu](https://walonchiu.github.io/)\*
 
 <sup>*Equal Advising</sup>
 
-Official PyTorch implementation of TPAMI 2026 paper "[MCPNet++: An Interpretable Classifier via Multi-Level Concept Prototypes](#introduction)".
+Official PyTorch implementation of TPAMI 2026 paper "[MCPNet++: Interpretable Classifier via Multi-Level Concept Prototypes](https://ieeexplore.ieee.org/document/11474497)".
 
-[[`Paper`](#introduction)] [[`Website`](#introduction)] [[`BibTeX`](#citation)]
+[[`Paper`](https://ieeexplore.ieee.org/document/11474497)] [[`Website`](https://eddie221.github.io/MCPNet_PP_web/)] [[`BibTeX`](#citation)]
 
 ## Introduction
 Post-hoc and inherently interpretable methods have shown great success in uncovering the inner workings of black-box models, whether by examining them after training or by explicitly designing for interpretability. While these approaches effectively narrow the semantic gap between a model’s latent space and human understanding, they typically extract only high-level semantics from the model’s final feature map. As a result, they provide a limited perspective on the decision-making process. We argue that explanations lacking insight into both lower- and mid-level semantics cannot be considered fully faithful or genuinely useful. To address this issue, we introduce the Multi-Level Concept Prototypes Classifier (MCPNet), which offers a more holistic interpretation by drawing on information from multiple levels within the model. Rather than relying on predefined concept labels, MCPNet autonomously discovers meaningful concepts from feature maps. To increase versatility, we further propose MCPNet++, which can be seamlessly applied to both CNN and transformer backbones, allowing it to learn meaningful concepts from their respective features. Building on these learned concepts, we also introduce a large language model (LLM)-based method to bridge the gap between these concepts and human perception. Experimental results show that MCPNet++ provides more comprehensive explanations without sacrificing model performance, with the discovered concepts aligning closely with human understanding.
@@ -81,5 +81,12 @@ Chien-Yi Wang: [chienyiw@nvidia.com](chienyiw@nvidia.com)
 
 ## Citation
 ```bibtex
-
+@ARTICLE{wang2026MCPNetPP,
+  author  = {Wang, Bor-Shiun and Wang, Chien-Yi and Chiu, Wei-Chen},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  title   = {MCPNet++: Interpretable Classification Models via Multi-Level Concept Prototypes},
+  year    = {2026},
+  pages   = {1--18},
+  doi     = {10.1109/TPAMI.2026.3680506}
+}
 ```
